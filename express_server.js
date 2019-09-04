@@ -74,7 +74,11 @@ app.get("/urls", (req, res) => {
     user: users[req.cookies["user_id"]],
     urls: urlsForUser(req.cookies["user_id"])
   };
-  res.render("urls_index", templateVars);
+  if (templateVars.user) {
+    res.render("urls_index", templateVars);
+  } else {
+    res.status(400).send("You need to login or register to access this page");
+  }
 });
 
 app.get("/urls/new", (req, res) => {
@@ -100,7 +104,14 @@ app.get("/urls/:shortURL", (req, res) => {
     shortURL: req.params.shortURL, 
     longURL: urlDatabase[req.params.shortURL].longURL
   };
-  res.render("urls_show", templateVars);
+  if (!templateVars.user) {
+    res.status(400).send("You need to register or login to access this page");
+  }
+  if (req.cookies["user_id"] === urlDatabase[templateVars.shortURL].userID) {
+    res.render("urls_show", templateVars);
+  } else {
+    res.status(400).send("This TinyURL doesn't belong to you!");
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -116,7 +127,7 @@ app.post("/urls/:shortURL/delete", (req,res) => {
 app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL;
+  urlDatabase[shortURL].longURL = longURL;
   res.redirect(`/urls/${shortURL}`);
 });
 
