@@ -41,13 +41,6 @@ const addUser = (email, password) => {
   return id;
 };
 
-const checkRegistration = (email, password) => {
-  if (email && password) {
-    return true;
-  }
-  return false
-};
-
 const findUser = email => {
   return Object.values(users).find(user => user.email === email);
 };
@@ -148,7 +141,7 @@ app.get("/register", (req,res) => {
 
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
-  if (!checkRegistration(email, password)) {
+  if (!email || !password) {
     res.status(400).send('Email and/or password is missing');
   } else if (findUser(email)) {
     res.status(400).send('This email has already been registered')
