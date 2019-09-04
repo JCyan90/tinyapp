@@ -14,8 +14,8 @@ function generateRandomString() {
 };
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "userRandomID" },
+  "9sm5xK": { longURL: "http://www.google.com", userID: "user2RandomID" }
 };
 
 const users = { 
@@ -61,6 +61,10 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+app.get("/urls2.json", (req, res) => {
+  res.json(users);
+});
+
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
@@ -68,20 +72,25 @@ app.get("/hello", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     user: users[req.cookies["user_id"]],
-    urls: urlDatabase 
+    urls: urlsForUser(req.cookies["user_id"])
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   let templateVars = { user: users[req.cookies["user_id"]] };
-  res.render("urls_new", templateVars);
+  if (templateVars.user) {
+    res.render("urls_new", templateVars);
+  } else {
+    res.render("urls_login", templateVars);
+  }
 });
 
 app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
+  const userID = req.cookies['user_id'];
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = longURL;
+  urlDatabase[shortURL] = { longURL, userID };
   res.redirect(`/urls/${shortURL}`);
 });
 
@@ -89,7 +98,7 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { 
     user: users[req.cookies["user_id"]],
     shortURL: req.params.shortURL, 
-    longURL: urlDatabase[req.params.shortURL] 
+    longURL: urlDatabase[req.params.shortURL].longURL
   };
   res.render("urls_show", templateVars);
 });
@@ -151,6 +160,16 @@ app.post("/register", (req, res) => {
     res.redirect("/urls");
   }
 });
+
+const urlsForUser = (id) => {
+  let filtered = {};
+  for (let urlID of Object.keys(urlDatabase)) {
+    if (urlDatabase[urlID].userID === id) {
+      filtered[urlID] = urlDatabase[urlID];
+    }
+  }
+  return filtered;
+};
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
