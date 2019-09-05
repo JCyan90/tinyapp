@@ -123,8 +123,10 @@ app.get("/urls/:shortURL", (req, res) => {
   };
   if (req.session.user_id === urlDatabase[templateVars.shortURL].userID) {
     res.render("urls_show", templateVars);
-  } else {
-    res.status(400).send("This TinyURL doesn't belong to you!");
+  } else if (!templateVars.longURL) {
+    res.status(400).send("This TinyURL does not exist")
+  } else {  
+    res.status(400).send("This TinyURL does not belong to you");
   }
 });
 
@@ -155,8 +157,15 @@ app.post("/urls/:shortURL", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  let templateVars = { user: users[req.session.user_id] };
-  res.render("urls_login", templateVars);
+  let templateVars = {
+    user: users[req.session.user_id],
+    urls: urlsForUser(req.session.user_id)
+  };
+  if (templateVars.user) {
+    res.render("urls_index", templateVars);
+  } else {
+    res.render("urls_login", templateVars);
+  }
 });
 
 app.post("/login", (req,res) => {
@@ -178,8 +187,15 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/register", (req,res) => {
-  let templateVars = { user: users[req.session.user_id] };
-  res.render("urls_register", templateVars);
+  let templateVars = {
+    user: users[req.session.user_id],
+    urls: urlsForUser(req.session.user_id)
+  };
+  if (templateVars.user) {
+    res.render("urls_index", templateVars);
+  } else {
+    res.render("urls_register", templateVars);
+  }
 });
 
 app.post("/register", (req, res) => {
