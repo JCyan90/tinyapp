@@ -23,14 +23,10 @@ app.set("view engine", "ejs");
 
 // / => homepage
 app.get("/", (req, res) => {
-  let templateVars = {
-    user: users[req.session.user_id],
-    urls: urlsForUser(req.session.user_id)
-  };
-  if (templateVars.user) {
-    res.render("urls_index", templateVars);
+  if (req.session.user_id) {
+    res.redirect("/urls");
   } else {
-    res.render("urls_login", templateVars);
+    res.redirect("/urls/login");
   }
 });
 
@@ -108,11 +104,10 @@ app.post("/urls/:shortURL/delete", (req,res) => {
 // /LOGIN
 app.get("/login", (req, res) => {
   let templateVars = {
-    user: users[req.session.user_id],
-    urls: urlsForUser(req.session.user_id)
+    user: users[req.session.user_id]
   };
   if (templateVars.user) {
-    res.render("urls_index", templateVars);
+    res.redirect("/urls");
   } else {
     res.render("urls_login", templateVars);
   }
@@ -140,11 +135,10 @@ app.post("/logout", (req, res) => {
 // /REGISTER
 app.get("/register", (req,res) => {
   let templateVars = {
-    user: users[req.session.user_id],
-    urls: urlsForUser(req.session.user_id)
+    user: users[req.session.user_id]
   };
   if (templateVars.user) {
-    res.render("urls_index", templateVars);
+    res.redirect("/urls");
   } else {
     res.render("urls_register", templateVars);
   }
