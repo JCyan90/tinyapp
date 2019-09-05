@@ -21,6 +21,10 @@ app.set("view engine", "ejs");
 
 // ROUTES
 
+app.get("/urls.json", (req, res) => {	
+   res.json(urlDatabase);		
+ });
+
 // / => homepage
 app.get("/", (req, res) => {
   if (req.session.user_id) {
@@ -40,11 +44,15 @@ app.get("/urls", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  const longURL = req.body.longURL;
-  const userID = req.session.user_id;
-  const shortURL = generateRandomString();
-  urlDatabase[shortURL] = { longURL, userID };
-  res.redirect(`/urls/${shortURL}`);
+  if (!req.session.user_id) {
+    res.status(400).send('You need to be logged in to perform that action')
+  } else {
+    const longURL = req.body.longURL;
+    const userID = req.session.user_id;
+    const shortURL = generateRandomString();
+    urlDatabase[shortURL] = { longURL, userID };
+    res.redirect(`/urls/${shortURL}`);
+  }
 });
 
 // /URLS/NEW => page to create a shortURL
@@ -60,7 +68,7 @@ app.get("/urls/new", (req, res) => {
 // /URLS/:SHORTURL => page of the specific shortURL
 app.get("/urls/:shortURL", (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
-    res.status(400).send("This TinyURL does not exist")
+    res.status(404).send("This TinyURL does not exist")
   }
   let templateVars = { 
     user: users[req.session.user_id],
@@ -99,7 +107,7 @@ app.post("/urls/:shortURL/delete", (req,res) => {
 // /U/:SHORTURL => access the actual link (longURL)
 app.get("/u/:shortURL", (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
-    res.status(400).send("This TinyURL does not exist")
+    res.status(404).send("This TinyURL does not exist")
   }
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
