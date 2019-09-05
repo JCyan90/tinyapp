@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const urlDatabase = require('./databases/urls');
 const users = require('./databases/users');
 
 function generateRandomString() {
@@ -23,10 +22,10 @@ const urlsForUser = (id, db) => {
 };
 
 // Add a user to the users database
-const addUser = (email, password) => {
+const addUser = (email, password, db) => {
   const hashedPassword = bcrypt.hashSync(password, 10);
   const id = generateRandomString();
-  users[id] = {
+  db[id] = {
     id,
     email,
     password: hashedPassword

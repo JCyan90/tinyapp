@@ -152,7 +152,7 @@ app.post("/register", (req, res) => {
   } else if (getUserByEmail(email, users)) {
     res.status(400).send('This email has already been registered')
   } else {
-    const user_id = addUser(email, password);
+    const user_id = addUser(email, password, users);
     req.session.user_id = user_id;
     res.redirect("/urls");
   }
