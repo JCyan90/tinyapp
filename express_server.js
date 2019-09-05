@@ -50,8 +50,9 @@ app.post("/urls", (req, res) => {
     const date = new Date();
     const longURL = req.body.longURL;
     const userID = req.session.user_id;
+    const visits = 0;
     const shortURL = generateRandomString();
-    urlDatabase[shortURL] = { longURL, date, userID };
+    urlDatabase[shortURL] = { userID, longURL, date, visits };
     res.redirect(`/urls/${shortURL}`);
   }
 });
@@ -74,7 +75,7 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { 
     user: users[req.session.user_id],
     shortURL: req.params.shortURL, 
-    longURL: urlDatabase[req.params.shortURL].longURL
+    urls: urlDatabase,
   };
   if (req.session.user_id === urlDatabase[templateVars.shortURL].userID) {
     res.render("urls_show", templateVars);
@@ -107,10 +108,12 @@ app.post("/urls/:shortURL/delete", (req,res) => {
 
 // /U/:SHORTURL => access the actual link (longURL)
 app.get("/u/:shortURL", (req, res) => {
-  if (!urlDatabase[req.params.shortURL]) {
+  const shortURL = req.params.shortURL;
+  if (!urlDatabase[shortURL]) {
     res.status(404).send("This TinyURL does not exist")
   }
   const longURL = urlDatabase[req.params.shortURL].longURL;
+  urlDatabase[shortURL].visits++;
   res.redirect(longURL);
 });
 
