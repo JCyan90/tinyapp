@@ -3,7 +3,8 @@ const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
-cookieSession = require('cookie-session')
+const cookieSession = require('cookie-session');
+const getUserByEmail = require('./helpers');
 
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -51,10 +52,6 @@ const addUser = (email, password) => {
     password: hashedPassword
   };
   return id;
-};
-
-const getUserByEmail = (email, database) => {
-  return Object.values(database).find(user => user.email === email);
 };
 
 const urlsForUser = (id) => {
