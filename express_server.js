@@ -47,10 +47,11 @@ app.post("/urls", (req, res) => {
   if (!req.session.user_id) {
     res.status(400).send('You need to be logged in to perform that action')
   } else {
+    const date = new Date();
     const longURL = req.body.longURL;
     const userID = req.session.user_id;
     const shortURL = generateRandomString();
-    urlDatabase[shortURL] = { longURL, userID };
+    urlDatabase[shortURL] = { longURL, date, userID };
     res.redirect(`/urls/${shortURL}`);
   }
 });
@@ -89,7 +90,7 @@ app.post("/urls/:shortURL", (req, res) => {
     urlDatabase[shortURL].longURL = longURL;
     res.redirect(`/urls/${shortURL}`);
   } else {
-    res.status(400).send("Your are not allowed to edit that TinyURL!")
+    res.status(400).send("Your are not allowed to edit that TinyURL");
   }
 });
 
