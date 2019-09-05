@@ -85,12 +85,6 @@ app.post("/urls/:shortURL", (req, res) => {
   }
 });
 
-// /U/:SHORTURL => access the actual link (longURL)
-app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL].longURL;
-  res.redirect(longURL);
-});
-
 // /URLS/:SHORTURL/DELETE
 app.post("/urls/:shortURL/delete", (req,res) => {
   const shortURL = req.params.shortURL;
@@ -100,6 +94,15 @@ app.post("/urls/:shortURL/delete", (req,res) => {
   } else {
     res.status(400).send("You are not allowed to delete that TinyURL!");
   }
+});
+
+// /U/:SHORTURL => access the actual link (longURL)
+app.get("/u/:shortURL", (req, res) => {
+  if (!urlDatabase[req.params.shortURL]) {
+    res.status(400).send("This TinyURL does not exist")
+  }
+  const longURL = urlDatabase[req.params.shortURL].longURL;
+  res.redirect(longURL);
 });
 
 // /LOGIN
