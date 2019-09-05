@@ -4,7 +4,7 @@ const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
-const { getUserByEmail } = require('./helpers');
+const { getUserByEmail, generateRandomString, urlsForUser, addUser } = require('./helpers');
 const users = require('./databases/users.js');
 const urlDatabase = require('./databases/urls.js');
 
@@ -18,53 +18,6 @@ app.use(
 );
 
 app.set("view engine", "ejs");
-
-// DATABASES
-
-// const urlDatabase = {
-//   "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "userRandomID" },
-//   "9sm5xK": { longURL: "http://www.google.com", userID: "user2RandomID" }
-// };
-
-// const users = { 
-//   "userRandomID": {
-//     id: "userRandomID", 
-//     email: "user@example.com", 
-//     password: "purple-monkey-dinosaur"
-//   },
-//  "user2RandomID": {
-//     id: "user2RandomID", 
-//     email: "user2@example.com", 
-//     password: "dishwasher-funk"
-//   }
-// };
-
-// FUNCTIONS
-
-function generateRandomString() {
-  return Math.random().toString(36).substring(6);
-};
-
-const addUser = (email, password) => {
-  const hashedPassword = bcrypt.hashSync(password, 10);
-  const id = generateRandomString();
-  users[id] = {
-    id,
-    email,
-    password: hashedPassword
-  };
-  return id;
-};
-
-const urlsForUser = (id) => {
-  let filtered = {};
-  for (let urlID of Object.keys(urlDatabase)) {
-    if (urlDatabase[urlID].userID === id) {
-      filtered[urlID] = urlDatabase[urlID];
-    }
-  }
-  return filtered;
-};
 
 // ROUTES
 
