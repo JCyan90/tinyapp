@@ -59,6 +59,9 @@ app.get("/urls/new", (req, res) => {
 
 // /URLS/:SHORTURL => page of the specific shortURL
 app.get("/urls/:shortURL", (req, res) => {
+  if (!urlDatabase[req.params.shortURL]) {
+    res.status(400).send("This TinyURL does not exist")
+  }
   let templateVars = { 
     user: users[req.session.user_id],
     shortURL: req.params.shortURL, 
@@ -66,8 +69,6 @@ app.get("/urls/:shortURL", (req, res) => {
   };
   if (req.session.user_id === urlDatabase[templateVars.shortURL].userID) {
     res.render("urls_show", templateVars);
-  } else if (!templateVars.longURL) {
-    res.status(400).send("This TinyURL does not exist")
   } else {  
     res.status(400).send("This TinyURL does not belong to you");
   }
