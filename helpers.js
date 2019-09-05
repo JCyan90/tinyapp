@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
-const users = require('./databases/users');
 
-function generateRandomString() {
+const generateRandomString = function() {
   return Math.random().toString(36).substring(6);
 };
 

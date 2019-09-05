@@ -21,9 +21,9 @@ app.set("view engine", "ejs");
 
 // ROUTES
 
-app.get("/urls.json", (req, res) => {	
-   res.json(urlDatabase);		
- });
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+});
 
 // / => homepage
 app.get("/", (req, res) => {
@@ -45,7 +45,7 @@ app.get("/urls", (req, res) => {
 
 app.post("/urls", (req, res) => {
   if (!req.session.user_id) {
-    res.status(400).send('You need to be logged in to perform that action')
+    res.status(400).send('You need to be logged in to perform that action');
   } else {
     const date = new Date();
     const longURL = req.body.longURL;
@@ -70,16 +70,16 @@ app.get("/urls/new", (req, res) => {
 // /URLS/:SHORTURL => page of the specific shortURL
 app.get("/urls/:shortURL", (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
-    res.status(404).send("This TinyURL does not exist")
+    res.status(404).send("This TinyURL does not exist");
   }
-  let templateVars = { 
+  let templateVars = {
     user: users[req.session.user_id],
-    shortURL: req.params.shortURL, 
+    shortURL: req.params.shortURL,
     urls: urlDatabase,
   };
   if (req.session.user_id === urlDatabase[templateVars.shortURL].userID) {
     res.render("urls_show", templateVars);
-  } else {  
+  } else {
     res.status(400).send("This TinyURL does not belong to you");
   }
 });
@@ -110,7 +110,7 @@ app.post("/urls/:shortURL/delete", (req,res) => {
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   if (!urlDatabase[shortURL]) {
-    res.status(404).send("This TinyURL does not exist")
+    res.status(404).send("This TinyURL does not exist");
   }
   const longURL = urlDatabase[req.params.shortURL].longURL;
   urlDatabase[shortURL].visits++;
@@ -165,7 +165,7 @@ app.post("/register", (req, res) => {
   if (!email || !password) {
     res.status(400).send('Email and/or password is missing');
   } else if (getUserByEmail(email, users)) {
-    res.status(400).send('This email has already been registered')
+    res.status(400).send('This email has already been registered');
   } else {
     const user_id = addUser(email, password, users);
     req.session.user_id = user_id;
