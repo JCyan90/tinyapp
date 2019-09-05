@@ -11,12 +11,12 @@ const getUserByEmail = (email, database) => {
   return Object.values(database).find(user => user.email === email);
 };
 
-// Return an URLs object with same userID as the user
-const urlsForUser = (id) => {
+// Return an object of URLs with same userID as the user
+const urlsForUser = (id, db) => {
   let filtered = {};
-  for (let urlID of Object.keys(urlDatabase)) {
-    if (urlDatabase[urlID].userID === id) {
-      filtered[urlID] = urlDatabase[urlID];
+  for (let urlID of Object.keys(db)) {
+    if (db[urlID].userID === id) {
+      filtered[urlID] = db[urlID];
     }
   }
   return filtered;
