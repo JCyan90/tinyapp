@@ -4,7 +4,7 @@ const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
-const getUserByEmail = require('./helpers');
+const { getUserByEmail } = require('./helpers');
 
 
 app.use(bodyParser.urlencoded({extended: true}));
