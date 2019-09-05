@@ -18,10 +18,6 @@ app.use(
 
 app.set("view engine", "ejs");
 
-function generateRandomString() {
-  return Math.random().toString(36).substring(6);
-};
-
 // DATABASES
 
 const urlDatabase = {
@@ -44,6 +40,10 @@ const users = {
 
 // FUNCTIONS
 
+function generateRandomString() {
+  return Math.random().toString(36).substring(6);
+};
+
 const addUser = (email, password) => {
   const hashedPassword = bcrypt.hashSync(password, 10);
   const id = generateRandomString();
@@ -55,8 +55,8 @@ const addUser = (email, password) => {
   return id;
 };
 
-const findUser = email => {
-  return Object.values(users).find(user => user.email === email);
+const getUserByEmail = (email, database) => {
+  return Object.values(database).find(user => user.email === email);
 };
 
 const urlsForUser = (id) => {
@@ -158,7 +158,7 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req,res) => {
   const { email, password } = req.body;
-  const user = findUser(email);
+  const user = getUserByEmail(email, users);
   if (!user) {
     res.status(403).send("Email cannot be found");
   } else if (!bcrypt.compareSync(password, user.password)) {
@@ -183,7 +183,7 @@ app.post("/register", (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     res.status(400).send('Email and/or password is missing');
-  } else if (findUser(email)) {
+  } else if (getUserByEmail(email, users)) {
     res.status(400).send('This email has already been registered')
   } else {
     const user_id = addUser(email, password);
