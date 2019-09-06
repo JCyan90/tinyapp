@@ -28,7 +28,23 @@
           <button type="submit" class="btn btn-info">Submit</button>
         </form>
       </div>
-      
+      <h3 style="text-align:left; margin-top:1em; margin-left:2em;">Visits History</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Visitor ID</th>
+            <th scope="col">Date of visit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(let visit of urls[shortURL].visitHistory) { %>
+            <tr>
+              <td><%= visit[1] %></td>
+              <td><%= visit[0].toLocaleDateString() %>, <%= visit[0].toLocaleTimeString() %></td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
   </div>
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
