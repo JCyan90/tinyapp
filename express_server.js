@@ -19,9 +19,6 @@ app.use(
 app.set("view engine", "ejs");
 
 // ROUTES
-app.get("/urls.json", (req, res) => {		
-  res.json(urlDatabase);		
-});
 
 // / => homepage
 app.get("/", (req, res) => {
