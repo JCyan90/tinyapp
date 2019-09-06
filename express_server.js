@@ -5,8 +5,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 const { getUserByEmail, generateRandomString, urlsForUser, addUser, addURL } = require('./helpers');
-const users = require('./databases/users.js');
-const urlDatabase = require('./databases/urls.js');
+const { urlDatabase, users } = require('./databases/db.js');
 
 
 app.use(bodyParser.urlencoded({extended: true}));
