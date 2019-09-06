@@ -36,10 +36,10 @@ const addUser = (email, password, db) => {
 const addURL = (longURL, userID, db) => {
   const date = new Date();
   const visitCount = 0;
-  const uVisits = 0;
+  const uVisitCount = 0;
   const visitor_id = [];
   const shortURL = generateRandomString();
-  db[shortURL] = { userID, longURL, date, visitCount, visitor_id, uVisits };
+  db[shortURL] = { userID, longURL, date, visitCount, visitor_id, uVisitCount };
   return shortURL;
 };
 

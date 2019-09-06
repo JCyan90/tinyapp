@@ -144,7 +144,7 @@ app.get("/u/:shortURL", (req, res) => {
     req.session.user_id = generateRandomString();
     urlDatabase[shortURL].visitCount++;
     urlDatabase[shortURL].visitor_id.push(req.session.user_id);
-    urlDatabase[shortURL].uVisits++;
+    urlDatabase[shortURL].uVisitCount++;
     res.redirect(longURL);
   } else {
     const longURL = urlDatabase[req.params.shortURL].longURL;
@@ -152,7 +152,7 @@ app.get("/u/:shortURL", (req, res) => {
     urlDatabase[shortURL].visitCount++;
     if (!visitorId.includes(req.session.user_id)) {
       visitorId.push(req.session.user_id);
-      urlDatabase[shortURL].uVisits++;
+      urlDatabase[shortURL].uVisitCount++;
     }
     res.redirect(longURL);
   }
