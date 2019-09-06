@@ -97,8 +97,14 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const longURL = req.body.longURL;
+  const newDate = new Date();
   if (req.session.user_id === urlDatabase[shortURL].userID) {
     urlDatabase[shortURL].longURL = longURL;
+    urlDatabase[shortURL].visitCount = 0;
+    urlDatabase[shortURL].visitHistory = [];
+    urlDatabase[shortURL].uVisitCount = 0;
+    urlDatabase[shortURL].visitorIDList = [];
+    urlDatabase[shortURL].dateCreation = newDate;
     res.redirect(`/urls/${shortURL}`);
   } else {
     let templateVars = {
