@@ -21,10 +21,6 @@ app.set("view engine", "ejs");
 
 // ROUTES
 
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
-
 // / => homepage
 app.get("/", (req, res) => {
   if (req.session.user_id) {
@@ -45,7 +41,13 @@ app.get("/urls", (req, res) => {
 
 app.post("/urls", (req, res) => {
   if (!req.session.user_id) {
-    res.status(400).send('You need to be logged in to perform that action');
+    let templateVars = {
+      status: 401,
+      message: 'You need to be logged in to perform that action',
+      user: users[req.session.user_id]
+    }
+    res.status(401);
+    res.render("urls_error", templateVars);
   } else {
     const date = new Date();
     const longURL = req.body.longURL;
@@ -70,7 +72,13 @@ app.get("/urls/new", (req, res) => {
 // /URLS/:SHORTURL => page of the specific shortURL
 app.get("/urls/:shortURL", (req, res) => {
   if (!urlDatabase[req.params.shortURL]) {
-    res.status(404).send("This TinyURL does not exist");
+    let templateVars = {
+      status: 404,
+      message: 'This TinyURL does not exist',
+      user: users[req.session.user_id]
+    }
+    res.status(404);
+    res.render("urls_error", templateVars);
   }
   let templateVars = {
     user: users[req.session.user_id],
@@ -80,7 +88,13 @@ app.get("/urls/:shortURL", (req, res) => {
   if (req.session.user_id === urlDatabase[templateVars.shortURL].userID) {
     res.render("urls_show", templateVars);
   } else {
-    res.status(400).send("This TinyURL does not belong to you");
+    let templateVars = {
+      status: 401,
+      message: 'This TinyURL does not belong to you',
+      user: users[req.session.user_id]
+    }
+    res.status(401);
+    res.render("urls_error", templateVars);
   }
 });
 
@@ -91,7 +105,13 @@ app.post("/urls/:shortURL", (req, res) => {
     urlDatabase[shortURL].longURL = longURL;
     res.redirect(`/urls/${shortURL}`);
   } else {
-    res.status(400).send("Your are not allowed to edit that TinyURL");
+    let templateVars = {
+      status: 401,
+      message: 'You are not allowed to edit that TinyURL',
+      user: users[req.session.user_id]
+    }
+    res.status(401);
+    res.render("urls_error", templateVars);
   }
 });
 
@@ -102,7 +122,13 @@ app.post("/urls/:shortURL/delete", (req,res) => {
     delete urlDatabase[req.params.shortURL];
     res.redirect("/urls");
   } else {
-    res.status(400).send("You are not allowed to delete that TinyURL!");
+    let templateVars = {
+      status: 401,
+      message: 'You are not allowed to delete that TinyURL',
+      user: users[req.session.user_id]
+    }
+    res.status(401);
+    res.render("urls_error", templateVars);
   }
 });
 
@@ -110,7 +136,13 @@ app.post("/urls/:shortURL/delete", (req,res) => {
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   if (!urlDatabase[shortURL]) {
-    res.status(404).send("This TinyURL does not exist");
+    let templateVars = {
+      status: 404,
+      message: 'This TinyURL does not exist',
+      user: users[req.session.user_id]
+    }
+    res.status(404);
+    res.render("urls_error", templateVars);
   }
   const longURL = urlDatabase[req.params.shortURL].longURL;
   urlDatabase[shortURL].visits++;
@@ -133,9 +165,21 @@ app.post("/login", (req,res) => {
   const { email, password } = req.body;
   const user = getUserByEmail(email, users);
   if (!user) {
-    res.status(403).send("Email cannot be found");
+    let templateVars = {
+      status: 401,
+      message: 'Email not found',
+      user: users[req.session.user_id]
+    }
+    res.status(401);
+    res.render("urls_error", templateVars);
   } else if (!bcrypt.compareSync(password, user.password)) {
-    res.status(403).send("Wrong password");
+    let templateVars = {
+      status: 401,
+      message: 'Password incorrect',
+      user: users[req.session.user_id]
+    }
+    res.status(401);
+    res.render("urls_error", templateVars);
   } else {
     req.session.user_id = user.id;
     res.redirect("/urls");
@@ -163,9 +207,22 @@ app.get("/register", (req,res) => {
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    res.status(400).send('Email and/or password is missing');
+    let templateVars = {
+      status: 401,
+      message: 'Email and/or password missing',
+      user: users[req.session.user_id]
+    }
+    res.status(401);
+    res.render("urls_error", templateVars);
+    ('Email and/or password missing');
   } else if (getUserByEmail(email, users)) {
-    res.status(400).send('This email has already been registered');
+    let templateVars = {
+      status: 409,
+      message: 'This email has already been registered',
+      user: users[req.session.user_id]
+    }
+    res.status(409);
+    res.render("urls_error", templateVars);
   } else {
     const user_id = addUser(email, password, users);
     req.session.user_id = user_id;
