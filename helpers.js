@@ -36,7 +36,7 @@ const addUser = (email, password, db) => {
 const addURL = (longURL, userID, db) => {
   const dateCreation = new Date();
   const visitCount = 0;
-  const visitHistory = {};
+  const visitHistory = [];
   const uVisitCount = 0;
   const visitorIDList = [];
   const shortURL = generateRandomString();
