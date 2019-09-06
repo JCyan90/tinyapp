@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
   if (req.session.user_id) {
     res.redirect("/urls");
   } else {
-    res.redirect("/urls/login");
+    res.redirect("/login");
   }
 });
 
@@ -140,10 +140,17 @@ app.get("/u/:shortURL", (req, res) => {
     }
     res.status(404);
     res.render("urls_error", templateVars);
+  } else if (!req.session.user_id) { 
+    const longURL = urlDatabase[req.params.shortURL].longURL;
+    req.session.user_id = generateRandomString();
+    urlDatabase[shortURL].visits++;
+    urlDatabase[shortURL].uVisits++;
+    res.redirect(longURL);
+  } else {
+    const longURL = urlDatabase[req.params.shortURL].longURL;
+    urlDatabase[shortURL].visits++;
+    res.redirect(longURL);
   }
-  const longURL = urlDatabase[req.params.shortURL].longURL;
-  urlDatabase[shortURL].visits++;
-  res.redirect(longURL);
 });
 
 // /LOGIN
