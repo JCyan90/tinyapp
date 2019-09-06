@@ -32,7 +32,7 @@
             <td><%= url %></td>
             <td><%= urls[url].longURL %></td>
             <td><%= urls[url].date.toLocaleDateString() %>, <%= urls[url].date.toLocaleTimeString() %></td>
-            <td style = "text-align: center"><%= urls[url].visits %></td>
+            <td style = "text-align: center"><%= urls[url].visitCount %></td>
             <td style = "text-align: center"><%= urls[url].uVisits %></td>
             <td>
                 <form method="GET" action="/urls/<%= url %>">

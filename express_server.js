@@ -142,14 +142,14 @@ app.get("/u/:shortURL", (req, res) => {
   } else if (!req.session.user_id) { 
     const longURL = urlDatabase[req.params.shortURL].longURL;
     req.session.user_id = generateRandomString();
-    urlDatabase[shortURL].visits++;
+    urlDatabase[shortURL].visitCount++;
     urlDatabase[shortURL].visitor_id.push(req.session.user_id);
     urlDatabase[shortURL].uVisits++;
     res.redirect(longURL);
   } else {
     const longURL = urlDatabase[req.params.shortURL].longURL;
     const visitorId = urlDatabase[shortURL].visitor_id;
-    urlDatabase[shortURL].visits++;
+    urlDatabase[shortURL].visitCount++;
     if (!visitorId.includes(req.session.user_id)) {
       visitorId.push(req.session.user_id);
       urlDatabase[shortURL].uVisits++;

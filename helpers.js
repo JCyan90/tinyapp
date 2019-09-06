@@ -35,11 +35,11 @@ const addUser = (email, password, db) => {
 // Add a URL to the urls database
 const addURL = (longURL, userID, db) => {
   const date = new Date();
-  const visits = 0;
+  const visitCount = 0;
   const uVisits = 0;
   const visitor_id = [];
   const shortURL = generateRandomString();
-  db[shortURL] = { userID, longURL, date, visits, visitor_id, uVisits };
+  db[shortURL] = { userID, longURL, date, visitCount, visitor_id, uVisits };
   return shortURL;
 };
 

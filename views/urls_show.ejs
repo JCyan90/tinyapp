@@ -17,7 +17,7 @@
         <h5 class="card-title">TinyURL for: <%= urls[shortURL].longURL %></h5>
         <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
         <p class="card-text">Date of creation: <%= urls[shortURL].date.toLocaleDateString() %>, <%= urls[shortURL].date.toLocaleTimeString() %></a></p>
-        <p class="card-text">Number of visits: <%= urls[shortURL].visits %></a></p>
+        <p class="card-text">Number of visits: <%= urls[shortURL].visitCount %></a></p>
         <p class="card-text">Number of unique visitors: <%= urls[shortURL].uVisits %></a></p>
       </div>
       <div class="card-footer text-muted">
