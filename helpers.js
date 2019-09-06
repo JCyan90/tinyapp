@@ -36,8 +36,9 @@ const addURL = (longURL, userID, db) => {
   const date = new Date();
   const visits = 0;
   const uVisits = 0;
+  const visitor_id = [];
   const shortURL = generateRandomString();
-  db[shortURL] = { userID, longURL, date, visits, uVisits };
+  db[shortURL] = { userID, longURL, date, visits, visitor_id, uVisits };
   return shortURL;
 };
 

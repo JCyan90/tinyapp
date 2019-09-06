@@ -20,7 +20,9 @@ app.use(
 app.set("view engine", "ejs");
 
 // ROUTES
-
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+});
 // / => homepage
 app.get("/", (req, res) => {
   if (req.session.user_id) {
@@ -144,11 +146,17 @@ app.get("/u/:shortURL", (req, res) => {
     const longURL = urlDatabase[req.params.shortURL].longURL;
     req.session.user_id = generateRandomString();
     urlDatabase[shortURL].visits++;
+    urlDatabase[shortURL].visitor_id.push(req.session.user_id);
     urlDatabase[shortURL].uVisits++;
     res.redirect(longURL);
   } else {
     const longURL = urlDatabase[req.params.shortURL].longURL;
+    const visitorId = urlDatabase[shortURL].visitor_id;
     urlDatabase[shortURL].visits++;
+    if (!visitorId.includes(req.session.user_id)) {
+      visitorId.push(req.session.user_id);
+      urlDatabase[shortURL].uVisits++;
+    }
     res.redirect(longURL);
   }
 });
