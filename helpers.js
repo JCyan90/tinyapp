@@ -32,6 +32,7 @@ const addUser = (email, password, db) => {
   return id;
 };
 
+// Add a URL to the urls database
 const addURL = (longURL, userID, db) => {
   const date = new Date();
   const visits = 0;
