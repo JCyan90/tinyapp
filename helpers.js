@@ -32,4 +32,12 @@ const addUser = (email, password, db) => {
   return id;
 };
 
-module.exports = { getUserByEmail, generateRandomString, urlsForUser, addUser };
+const addURL = (longURL, userID, db) => {
+  const date = new Date();
+  const visits = 0;
+  const shortURL = generateRandomString();
+  db[shortURL] = { userID, longURL, date, visits };
+  return shortURL;
+};
+
+module.exports = { getUserByEmail, generateRandomString, urlsForUser, addUser, addURL };

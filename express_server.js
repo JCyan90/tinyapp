@@ -4,7 +4,7 @@ const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
-const { getUserByEmail, generateRandomString, urlsForUser, addUser } = require('./helpers');
+const { getUserByEmail, generateRandomString, urlsForUser, addUser, addURL } = require('./helpers');
 const users = require('./databases/users.js');
 const urlDatabase = require('./databases/urls.js');
 
@@ -20,6 +20,13 @@ app.use(
 app.set("view engine", "ejs");
 
 // ROUTES
+
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+});
+app.get("/urls2.json", (req, res) => {
+  res.json(users);
+});
 
 // / => homepage
 app.get("/", (req, res) => {
@@ -49,12 +56,9 @@ app.post("/urls", (req, res) => {
     res.status(401);
     res.render("urls_error", templateVars);
   } else {
-    const date = new Date();
     const longURL = req.body.longURL;
     const userID = req.session.user_id;
-    const visits = 0;
-    const shortURL = generateRandomString();
-    urlDatabase[shortURL] = { userID, longURL, date, visits };
+    const shortURL = addURL(longURL, userID, urlDatabase);
     res.redirect(`/urls/${shortURL}`);
   }
 });
