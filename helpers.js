@@ -34,12 +34,13 @@ const addUser = (email, password, db) => {
 
 // Add a URL to the urls database
 const addURL = (longURL, userID, db) => {
-  const date = new Date();
+  const dateCreation = new Date();
   const visitCount = 0;
+  const visitHistory = {};
   const uVisitCount = 0;
-  const visitor_id = [];
+  const visitorIDList = [];
   const shortURL = generateRandomString();
-  db[shortURL] = { userID, longURL, date, visitCount, visitor_id, uVisitCount };
+  db[shortURL] = { userID, longURL, dateCreation, visitCount, visitHistory, visitorIDList, uVisitCount };
   return shortURL;
 };
 
