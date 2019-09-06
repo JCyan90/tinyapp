@@ -22,7 +22,8 @@
           <th scope="col">Short URL</th>
           <th scope="col">Long URL</th>
           <th scope="col">Date of creation</th>
-          <th scope="col">Number of visits</th>
+          <th scope="col">Visits</th>
+          <th scope="col">Unique visitors</th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +33,7 @@
             <td><%= urls[url].longURL %></td>
             <td><%= urls[url].date %></td>
             <td style = "text-align: center"><%= urls[url].visits %></td>
+            <td style = "text-align: center"><%= urls[url].uVisits %></td>
             <td>
                 <form method="GET" action="/urls/<%= url %>">
                   <button type="submit" class="btn btn-outline-primary">Edit</button>
