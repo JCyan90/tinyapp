@@ -131,6 +131,7 @@ app.post("/urls/:shortURL/delete", (req,res) => {
 // /U/:SHORTURL => access the actual link (longURL)
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
+  const longURL = urlDatabase[shortURL].longURL;
   const dateVisit = new Date();
   if (!urlDatabase[shortURL]) {
     let templateVars = {
@@ -141,15 +142,13 @@ app.get("/u/:shortURL", (req, res) => {
     res.status(404);
     res.render("urls_error", templateVars);
   } else if (!req.session.user_id) { 
-    const longURL = urlDatabase[req.params.shortURL].longURL;
     req.session.user_id = generateRandomString();
     urlDatabase[shortURL].visitHistory[dateVisit] = req.session.user_id;
     urlDatabase[shortURL].visitCount++;
     urlDatabase[shortURL].visitorIDList.push(req.session.user_id);
     urlDatabase[shortURL].uVisitCount++;
-    res.redirect(longURL);
   } else {
-    const longURL = urlDatabase[req.params.shortURL].longURL;
+    
     const visitorId = urlDatabase[shortURL].visitorIDList;
     urlDatabase[shortURL].visitHistory[dateVisit] = req.session.user_id;
     urlDatabase[shortURL].visitCount++;
@@ -157,7 +156,11 @@ app.get("/u/:shortURL", (req, res) => {
       visitorId.push(req.session.user_id);
       urlDatabase[shortURL].uVisitCount++;
     }
+  }
+  if (longURL.startsWith("http://")) {
     res.redirect(longURL);
+  } else {
+    res.redirect(`http://${longURL}`);
   }
 });
 
